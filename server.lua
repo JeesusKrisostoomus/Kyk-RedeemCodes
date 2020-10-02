@@ -33,7 +33,11 @@ RegisterCommand("genCode", function(source, args, rawCommand)
             if (args[2] == "") then
                 print("Invalid Amount")
             else
-                RandomCodeGenerator()    
+                RandomCodeGenerator()
+		Wait(5)
+		MySQL.Async.execute("INSERT INTO RedeemCodes (code, type, amount) VALUES (@code,@type,@amount)", {['@code'] = RandomCode, ['@type'] = money, ['@amount'] = args[2]})
+		Wait(5)
+		RandomCode = ""
             end
         else
             print("Unknown Type. Please make sure u typed everything correctly and that the script is correctly setup.")
