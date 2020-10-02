@@ -40,7 +40,7 @@ RegisterCommand("genCode", function(source, args, rawCommand)
         end
 end, true)
 
-RegisterCommand("redeem", function(source, args)
+RegisterCommand("redeem", function(source, args, rawCommand)
     MySQL.Async.fetchAll('SELECT * FROM `RedeemCodes` WHERE `code` = @code', {
 			['@code'] = args[1]
 	}, function(data)
@@ -61,4 +61,4 @@ RegisterCommand("redeem", function(source, args)
 			})
 		end
     end)    
-end)
+end, false)
