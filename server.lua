@@ -1,10 +1,3 @@
---[[
-    local _source = source
-    local money = 0
-    local bankmoney = 0
-    local identifier = GetPlayerIdentifiers(_source)[1]
-    MySQL.Async.execute("INSERT INTO moneyAccounts (identifier, cash, bank) VALUES (@Identifier,@cash,@bank)", {['@identifier'] = identifier, ['@cash'] = money, ['@bank'] = bankmoney})
-]]
 local oldPrint = print
 print = function(trash)
 	oldPrint('^2[Redeem Codes] '..trash..'^0')
