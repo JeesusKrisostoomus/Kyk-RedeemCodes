@@ -19,7 +19,7 @@ end
 ]]
 RegisterCommand("genCode", function(source, args, rawCommand)
 	if (args[1] == "money" or args[1] == "Money") then
-        if (args[2] == "" or args[2] == nil) then
+        if (args[2] == nil) then
 			if (source == 0) then
 				print("Invalid arguments")
 			else
@@ -51,7 +51,7 @@ end, true)
 RegisterCommand("redeem", function(source, args, rawCommand)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	if (args[1] == "" or args[1] == nil) then 
+	if (args[1] == nil) then 
 		if (source ~= 0) then
 			TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "Code cannot be empty!" }, color = 255,255,255 })
 		else
