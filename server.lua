@@ -9,7 +9,6 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local RandomCode = ""
 
 function RandomCodeGenerator()
-    math.randomseed(os.time())
 	RandomCode = math.random(Config.minNumber, Config.maxNumber)
 	return RandomCode
 end
@@ -19,7 +18,7 @@ end
 ]]
 RegisterCommand("genCode", function(source, args, rawCommand)
 	if (args[1] == "money" or args[1] == "Money") then
-        if (args[2] == "" or args[2] == nil) then
+        if (args[2] == nil) then
 			if (source == 0) then
 				print("Invalid arguments")
 			else
@@ -34,7 +33,7 @@ RegisterCommand("genCode", function(source, args, rawCommand)
 			if (source ~= 0) then
 				TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code generated successfully! Check the database to see the code." }, color = 255,255,255 })
 			else
-				print("Code Generated Successfully!\n[Code Info] Code Type: Money\n[Code Info] Code: "..RandomCode)
+				print("Code Generated Successfully! Code: "..RandomCode)
 			end
 			Wait(5)
 			RandomCode = ""
@@ -51,7 +50,7 @@ end, true)
 RegisterCommand("redeem", function(source, args, rawCommand)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	if (args[1] == "" or args[1] == nil) then 
+	if (args[1] == nil) then 
 		if (source ~= 0) then
 			TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "Code cannot be empty!" }, color = 255,255,255 })
 		else
