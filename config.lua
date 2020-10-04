@@ -1,3 +1,8 @@
 Config = {}
 
-Config.codeLength = 10 --[[ This number decides, how long the generated code will be. ]]
+Config.minNumber = 0000000
+Config.maxNumber = 9999999
+
+--[[
+    This generates a number between 0000000 and 9999999
+]]
