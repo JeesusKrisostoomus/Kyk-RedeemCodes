@@ -51,7 +51,7 @@ end, true)
 RegisterCommand("redeem", function(source, args, rawCommand)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	if (args[1] == "" or args[1] == " ") then 
+	if args[1] == nil then 
 		print("Code cannot be empty")
 	else
     	MySQL.Async.fetchAll('SELECT * FROM `RedeemCodes` WHERE `code` = @code', {
