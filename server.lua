@@ -9,8 +9,29 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local RandomCode = ""
 
 function RandomCodeGenerator()
-	RandomCode = math.random(Config.minNumber, Config.maxNumber)
-	return RandomCode
+	if Config.numericGen then
+		RandomCode = math.random(Config.minNumber, Config.maxNumber)
+
+		return RandomCode
+	else
+		if Config.alphanumericGen then
+			local chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+			local length = Config.length
+
+			charTable = {}
+			for c in chars:gmatch"." do
+				table.insert(charTable, c)
+			end
+
+			for i = 1, length do
+				RandomCode = RandomCode .. charTable[math.random(1, #charTable)]
+			end
+
+			return RandomCode
+		else
+			print("^1You didn't select any method for generator.")
+		end
+	end
 end
 
 --[[
@@ -33,7 +54,11 @@ RegisterCommand("genCode", function(source, args, rawCommand)
 			if (source ~= 0) then
 				TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code generated successfully! Check the database to see the code." }, color = 255,255,255 })
 			else
-				print("Code Generated Successfully! Code: "..RandomCode)
+				if (Config.numericGen == false) and (Config.alphanumericGen == false) then
+					print("Generator method wasn't selected.")
+				else
+					print("Code Generated Successfully! Code: "..RandomCode)
+				end
 			end
 			Wait(5)
 			RandomCode = ""
