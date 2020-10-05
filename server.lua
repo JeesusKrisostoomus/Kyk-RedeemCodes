@@ -87,7 +87,7 @@ RegisterCommand("multiGen", function(source, args, rawCommand)
 			else
 				if (args[3] == nil) then args[3] = 0 end --[[ I have no clue why 0 == 1, 1 == 2 but hey whatever.]]
 				if (tonumber(args[3]) < 21) then
-					for shit=0, args[3] do
+					for shit=0, args[3]-1 do
 						MySQL.Async.execute("INSERT INTO RedeemCodes (code, type, amount) VALUES (@code,@type,@amount)", {
 							['@code'] = RandomCodeGenerator(),
 							['@type'] = "money", 
