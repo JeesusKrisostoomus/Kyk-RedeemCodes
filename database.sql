@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS redeemcodes;
-CREATE TABLE IF NOT EXISTS redeemcodes (
-  code text(65535) COLLATE utf8mb4_bin DEFAULT NULL,
-  type text(65535) COLLATE utf8mb4_bin DEFAULT NULL,
-  amount text(65535) COLLATE utf8mb4_bin DEFAULT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+DROP TABLE IF EXISTS `redeemcodes`;
+CREATE TABLE `redeemcodes` (
+  `code` text DEFAULT NULL,
+  `type` text DEFAULT NULL,
+  `amount` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
