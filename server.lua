@@ -1,9 +1,7 @@
---[[
 local oldPrint = print
 print = function(trash)
 	oldPrint('^2[Redeem Codes] '..trash..'^0')
 end
-]]
 
 ESX = nil 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -139,30 +137,3 @@ RegisterCommand("redeem", function(source, args, rawCommand)
 		end)
 	end
 end, false)
-
---[[
-if (args[1] == data[1].code) then
-	if (source ~= 0) then
-		if (data[1].type == "money") then
-			xPlayer.addAccountMoney('bank', tonumber(data[1].amount))
-			TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully! You just recieved: $"..data[1].amount }, color = 255,255,255 })
-			MySQL.Async.execute("DELETE FROM RedeemCodes WHERE code = @code;", {
-				['@code'] = args[1],
-			})
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully!" }, color = 255,255,255 })
-			MySQL.Async.execute("DELETE FROM RedeemCodes WHERE code = @code;", {
-				['@code'] = args[1],
-			})
-		end
-	else
-		print("Dude you arent supposed to redeem codes as console. Thats against the law.")
-	end
-else
-	if (source ~= 0) then
-		TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "Invalid Code!" }, color = 255,255,255 })
-	else
-		print("Invalid Code")
-	end
-end
-]]
