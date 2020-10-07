@@ -137,7 +137,7 @@ RegisterCommand("multiGen", function(source, args, rawCommand)
 	if (Config.numericGenerator == false and Config.alphanumericGen == false) then
 		print("^1Please select a valid generation method from the config first.")
 	else
-		if (string.lower(args[1] == "bank")) then
+		if (string.lower(args[1]) == "bank") then
 			if (args[2] == nil) then
 				if (source == 0) then
 					print("Invalid arguments")
@@ -153,7 +153,9 @@ RegisterCommand("multiGen", function(source, args, rawCommand)
 							['@type'] = "bank", 
 							['@amount'] = args[2]
 						})
-						print("Code Generated Successfuly! Code: "..RandomCode)
+						if (source == 0) then
+							print("Code Generated Successfully! Code: "..RandomCode)
+						end
 						RandomCode = ""
 					end
 					if (source ~= 0) then
@@ -185,7 +187,9 @@ RegisterCommand("multiGen", function(source, args, rawCommand)
 							['@type'] = "cash", 
 							['@amount'] = args[2]
 						})
-						print("Code Generated Successfuly! Code: "..RandomCode)
+						if (source == 0) then
+							print("Code Generated Successfully! Code: "..RandomCode)
+						end
 						RandomCode = ""
 					end
 					if (source ~= 0) then
@@ -201,7 +205,7 @@ RegisterCommand("multiGen", function(source, args, rawCommand)
 					end
 				end
 			end
-		elseif (string.lower(args[1] == "item")) then
+		elseif (string.lower(args[1]) == "item") then
 			if (args[2] == nil) then
 				if (source == 0) then
 					print("Invalid arguments")
@@ -219,7 +223,9 @@ RegisterCommand("multiGen", function(source, args, rawCommand)
 							['@item'] = args[2],
 							['@count'] = args[3]
 						})
-						print("Code Generated Successfuly! Code: "..RandomCode)
+						if (source == 0) then
+							print("Code Generated Successfully! Code: "..RandomCode)
+						end
 						RandomCode = ""
 					end
 					if (source ~= 0) then
@@ -270,7 +276,7 @@ RegisterCommand("redeem", function(source, args, rawCommand)
 					if (source ~= 0) then
 						if (data[1].type == "bank") then
 							xPlayer.addAccountMoney('bank', tonumber(data[1].amount))
-							TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully! You just recieved: $"..data[1].amount }, color = 255,255,255 })
+							TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully! You just recieved: $"..data[1].amount.." Bank." }, color = 255,255,255 })
 							MySQL.Async.execute("DELETE FROM RedeemCodes WHERE code = @code;", {
 								['@code'] = args[1],
 							})
@@ -282,7 +288,7 @@ RegisterCommand("redeem", function(source, args, rawCommand)
 							})
 						elseif (data[1].type == "item") then
 							xPlayer.addInventoryItem(data[1].item, data[1].count)
-							TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully! You just recieved: "..data[1].count.." of "..data[1].item }, color = 255,255,255 })
+							TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully! You just recieved: "..data[1].count.." of "..data[1].item.."." }, color = 255,255,255 })
 							MySQL.Async.execute("DELETE FROM RedeemCodes WHERE code = @code;", {
 								['@code'] = args[1],
 							})
