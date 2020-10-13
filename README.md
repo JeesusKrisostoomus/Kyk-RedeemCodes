@@ -24,4 +24,3 @@ If you do decide to make your own version of it then it would be nice if you cre
 - genCode command only works from the console. If you want to generate the codes from ingame then be sure to add ace permissions to the user/group you want to have acces to this command.
   - Allow access to all admins: add_ace group.admin "RedeemCodes.genCode" allow
   - Allow access to specific individual: add_ace identifier.steam:steam_identifier_here "RedeemCodes.genCode" allow
-- Database setup will be changed in the future because the current design is trash.
