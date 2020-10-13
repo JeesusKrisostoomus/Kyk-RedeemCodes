@@ -76,6 +76,12 @@ RegisterCommand("genCode", function(source, args, rawCommand)
 				else
 					TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "Invalid Arguments. Usage: /genCode item 'item_spawn_name' 'item count'" }, color = 255,255,255 })
 				end
+			elseif (args[1] == "item_" and args[2] == nil) then
+				if (source == 0) then
+					print("Invalid arguments.\n[^2Redeem Codes^7] Usage: genCode item_ item_spawn_name' 'item count'")
+				else
+					TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "Invalid Arguments. Usage: /genCode item_ 'item_spawn_name' 'item count'" }, color = 255,255,255 })
+				end
 			elseif (args[1] == "weapon" and args[2] == nil) then
 				if (source == 0) then
 					print("Invalid arguments.\n[^2Redeem Codes^7] Usage: genCode weapon 'weapon_spawn_name' 'ammo_count'")
@@ -173,6 +179,34 @@ RegisterCommand("genCode", function(source, args, rawCommand)
 						Wait(5)
 						RandomCode = ""
 					end
+				end
+			end)
+		elseif (string.lower(args[1]) == "item_") then
+			MySQL.Async.fetchAll('SELECT * FROM `items` WHERE `name` = @name', {
+				['@name'] = args[2]
+			}, function(data2)
+				if (args[2] == nil) then
+					if (source == 0) then
+						print("Invalid arguments")
+					else
+						TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "Invalid Arguments." }, color = 255,255,255 })
+					end
+				else
+					MySQL.Async.execute("INSERT INTO RedeemCodes (code, type, data1, data2) VALUES (@code,@type,@data1,@data2)", {
+						['@code'] = RandomCodeGenerator(),
+						['@type'] = "item_",
+						['@data1'] = string.lower(args[2]), --[[ Data1: Item(s) name ]]
+						['@data2'] = args[3] --[[ Data2: Amount ]]
+					})
+					if (source ~= 0) then
+						TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code generated successfully! Check the database to see the code." }, color = 255,255,255 })
+					else
+						if RandomCode ~= nil and RandomCode ~= "" then
+							print("Code Generated Successfully! Code: "..RandomCode)
+						end
+					end
+					Wait(5)
+					RandomCode = ""
 				end
 			end)
 		end
@@ -343,10 +377,36 @@ RegisterCommand("multiGen", function(source, args, rawCommand)
 					print("Chill. Lets not crash the database.")
 				end
 			end
+		elseif (string.lower(args[1]) == "item_") then
+			if (tonumber(args[4]) < 21) then
+				for shit=0, args[4]-1 do
+					MySQL.Async.execute("INSERT INTO RedeemCodes (code, type, data1, data2) VALUES (@code,@type,@data1,@data2)", {
+						['@code'] = RandomCodeGenerator(),
+						['@type'] = "item_",
+						['@data1'] = string.lower(args[2]), --[[ Data1: Item(s) name ]]
+						['@data2'] = args[3] --[[ Data2: Amount ]]
+					})
+					if (source == 0) then
+						if RandomCode ~= nil and RandomCode ~= "" then
+							print("Code Generated Successfully! Code: "..RandomCode)
+						end
+					end
+					Wait(5)
+					RandomCode = ""
+				end
+				if (source ~= 0) then
+					TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Codes generated successfully! Check the database to see the codes." }, color = 255,255,255 })
+				end
+			else
+				if (source ~= 0) then
+					TriggerClientEvent('chat:addMessage', source, { args = { '^7[^1Error^7]^2', "Chill. Lets not crash the database." }, color = 255,255,255 })
+				else
+					print("Chill. Lets not crash the database.")
+				end
+			end
 		end
 	end
 end, true)
-
 
 --[[
 	Redeem Command
@@ -401,6 +461,27 @@ RegisterCommand("redeem", function(source, args, rawCommand)
 							TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully! You just recieved: "..data[1].data1.." of "..data[1].data2.."." }, color = 255,255,255 })
 							if Config.globalAnnouncements then
 								TriggerClientEvent('chat:addMessage', -1, { args = { '^7[^2Reward Codes^7]', "^1"..GetPlayerName(source).." ^7Just redeemed a reward code and recieved: ^1"..data[1].data2.."x "..data[1].data1 }, color = 255,255,255 })
+							end
+						elseif (data[1].type == "item_") then
+							--[[ Deletes the code from database ]]
+							MySQL.Async.execute("DELETE FROM RedeemCodes WHERE code = @code;", {
+								['@code'] = args[1],
+							})
+							--[[ Makes sure to give every mentioned item to the player ]]
+							for v in string.gmatch(data[1].data1, "[^%s]+") do
+								xPlayer.addInventoryItem(v, data[1].data2)
+							end
+							--[[ (GLBOAL ANNOUNCEMENT STUFF) Basicly takes the item spawn names and seperates them with ', ' and then puts the words into a table which is fed into the global announcement ]]
+							d = data[1].data1
+							ch = {}
+							for substring in d:gmatch("%S+") do
+								table.insert(ch, substring)
+							end
+							--[[ Redeemer Message ]]
+							TriggerClientEvent('chat:addMessage', source, { args = { '^7[^2Success^7]^2', "Code redeemed successfully! You just recieved: "..data[1].data1.." of "..data[1].data2.."." }, color = 255,255,255 })
+							--[[ Check if global announcements are on if they are then announce the rewards globally ]]
+							if Config.globalAnnouncements then
+								TriggerClientEvent('chat:addMessage', -1, { args = { '^7[^2Reward Codes^7]', "^1"..GetPlayerName(source).." ^7Just redeemed a reward code and recieved: ^1"..data[1].data2.."x of "..table.concat(ch, ", ") }, color = 255,255,255 })
 							end
 						elseif (data[1].type == "weapon") then
 							MySQL.Async.execute("DELETE FROM RedeemCodes WHERE code = @code;", {
